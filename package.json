@@ -6,12 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "sample" : "node samples/API-Sample.js"
+    "sample": "node samples/API-Sample.js"
   },
   "author": "Tom Bryant & Gabriel Indik",
   "license": "MIT",
   "dependencies": {
     "consortium-setup-utility": "git+https://github.com/kaleido-io/consortium-setup-utility.git",
+    "eject": "0.0.4",
     "request": "^2.88.0"
   },
   "devDependencies": {
