@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import logo from './logo.svg';
 
+import './App.scss'; // or `.scss` if you chose scss
 import './App.min.css';
 
 class App extends Component {
