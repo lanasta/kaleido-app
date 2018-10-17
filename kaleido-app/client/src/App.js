@@ -8,7 +8,7 @@ import './App.scss'; // or `.scss` if you chose scss
 import './App.min.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import logo from './images/kaleido.png'
+import logo from './images/logo.svg'
 import consortium from './images/consortium.svg'
 import membership from './images/membership.svg'
 import environment from './images/environment.svg'
@@ -20,15 +20,16 @@ library.add(far)
 
 class App extends Component {
   state = {
-    consortia: '',
+    consortium: '',
     invitations: '',
     memberships: '',
     audits: '',
   };
 
   componentDidMount() {
-    this.getEndpoint("consortia")
-      .then(res => this.setState({ consortia: res }))
+    document.title = "Anastasia's Kaleido App";
+    this.getEndpoint("consortium")
+      .then(res => this.setState({ consortium: res }))
       .catch(err => console.log(err));
 
     this.getEndpoint("invitations")
@@ -47,7 +48,7 @@ class App extends Component {
   getEndpoint = async (endpointName) => {
     const response = await fetch('/' + endpointName);
     const body = await response.json();
-
+    console.log(body);
     if (response.status !== 200) throw Error(body.message);
     return body;
   };
@@ -61,62 +62,88 @@ class App extends Component {
     return <>{header}<tbody>{auditLogs}</tbody></>;
   }
 
+  renderConsortiumInfo(){
+    console.log(this.state.consortium);
+    return <><div className='consortiumName'>{this.state.consortium.name}</div><div className='consortiumDescription'>{this.state.consortium.description}</div></>;
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
-            <div className="wrapper"><img src={logo} width='180'></img></div>
+          <div className="">
+            <div className="wrapper">
+              <div className='logo'><img src={logo} width='180'></img></div>
+              <div className='navIcons'>
+                <FontAwesomeIcon className='navIcons-fa' icon={['far', 'question-circle']} />
+                <FontAwesomeIcon className='navIcons-fa' icon={['far', 'wrench']} />
+                <FontAwesomeIcon className='navIcons-fa' icon={['far', 'sign-out']} />
+              </div>
+            </div>
+          </div>
         </header>
-        {/* <p className="App-intro">{JSON.stringify(this.state.consortia, null, 2) }</p>
+        {/* <p className="App-intro">{JSON.stringify(this.state.consortium, null, 2) }</p>
         <p className="App-intro">{JSON.stringify(this.state.invitations, null, 2) }</p>
         <p className="App-intro">{JSON.stringify(this.state.memberships, null, 2) }</p> */}
-        <div className="wrapper"><h2>Audit Logs</h2><table className='kaleidoTable' border="0" cellPadding="0" cellSpacing="0">{this.renderAuditLog()}</table></div>
+        <div className="wrapper">
+          <div className="consortiumInfo">{this.renderConsortiumInfo()}</div>
+          <h2>Audit Logs</h2>
+          <table className='kaleidoTable' border="0" cellPadding="0" cellSpacing="0">{this.renderAuditLog()}</table>
+        </div>
       </div>
     );
   }
 }
 
 function StatusSymbol(props){
+  let states = {
+    "upgrade_pending" : "Upgrade Pending"
+  }
+  let state = (states[props.state] == null) ? props.state : states[props.state];
     switch(props.state) {
       case 'sent':
-        return <FontAwesomeIcon className='status-fa neutral' icon={['far', 'paper-plane']} />;
+        return <><FontAwesomeIcon className='status-fa neutral' icon={['far', 'paper-plane']} />{state}</>;
       case 'accepted':
-        return <FontAwesomeIcon className='status-fa green' icon={['far', 'user-check']} />;
+        return <><FontAwesomeIcon className='status-fa green' icon={['far', 'user-check']} />{state}</>;
       case 'declined':
-        return <FontAwesomeIcon className='status-fa alert' icon={['far', 'user-times']} />;
+        return <><FontAwesomeIcon className='status-fa alert' icon={['far', 'user-times']} />{state}</>;
       case 'initializing':
-        return <FontAwesomeIcon className='status-fa neutral' icon={['far', 'spinner']} />;
+        return <><FontAwesomeIcon className='status-fa neutral' icon={['far', 'spinner']} />{state}</>;
       case 'started':
-        return <FontAwesomeIcon className='status-fa green' icon={['far', 'cogs']} />;
+        return <><FontAwesomeIcon className='status-fa green' icon={['far', 'cogs']} />{state}</>;
       case 'active':
-        return <FontAwesomeIcon className='status-fa green' icon={['far', 'circle']} />;
+        return <><FontAwesomeIcon className='status-fa green' icon={['far', 'circle']} />{state}</>;
       case 'setup':
-        return <FontAwesomeIcon className='status-fa neutral' icon={['far', 'wrench']} />;
+        return <><FontAwesomeIcon className='status-fa neutral' icon={['far', 'wrench']} />{state}</>;
       case 'live':
-        return <FontAwesomeIcon className='status-fa green' icon={['far', 'globe']} />;
+        return <><FontAwesomeIcon className='status-fa green' icon={['far', 'globe']} />{state}</>;
+      case 'upgrading':
+        return <><FontAwesomeIcon className='status-fa green' icon={['far', 'sync']} />{state}</>;
+      case 'upgrade_pending':
+        return <><FontAwesomeIcon className='status-fa neutral' icon={['far', 'sync']} />{state}</>;
       default:
         return null;
     }
 }
 
-function ConsortiaAuditLog(props){
-  return  <><td>{props.action} consortia <b> {props.data.name} </b> owned by <b> {props.data.owner_org_name}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></td></>;
+function ConsortiumAuditLog(props){
+  return  <><td>{props.action} consortium <b> {props.data.name} </b> owned by <b> {props.data.owner_org_name}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function MembershipAuditLog(props){
-  return  <><td>{props.action} membership <b>{props.data.org_name}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></td></>;
+  return  <><td>{props.action} membership <b>{props.data.org_name}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function EnvironmentAuditLog(props){
-  return  <><td>{props.action} environment <b> {props.data.name}</b> with consensus type <b>{props.data.consensus_type}</b> and provider <b>{props.data.provider}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></td></>;
+  return  <><td>{props.action} environment <b> {props.data.name}</b> with consensus type <b>{props.data.consensus_type}</b> and provider <b>{props.data.provider}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function NodeAuditLog(props){
-  return  <><td>{props.action} node <b> {props.data.name}</b> with role <b>{props.data.role}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></td></>;
+  return  <><td>{props.action} node <b> {props.data.name}</b> with role <b>{props.data.role}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function InvitationAuditLog(props){
-  return  <><td>{props.action} invitation to <b> {props.data.org_name}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></td></>;
+  return  <><td>{props.action} invitation to <b> {props.data.org_name}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function auditType(){
@@ -132,12 +159,9 @@ function AuditLog(props){
     "delete" : "Deleted"
   }
   switch(props.audit.objectType) {
-     case 'consortia':
-     // return <tr><td><img src={consortium}></img>{time}</td><td>{actions[props.audit.action]} <ConsortiaAuditLog data={props.audit.data} /></tr>;
-
-       return <tr><td><img src={consortium}></img></td><td>{time}</td><ConsortiaAuditLog action={actions[props.audit.action]} data={props.audit.data} /></tr>;
+     case 'consortium':
+       return <tr><td><img src={consortium}></img></td><td>{time}</td><ConsortiumAuditLog action={actions[props.audit.action]} data={props.audit.data} /></tr>;
       case 'memberships':
-//      return <img src={membership}></img>{time} <MembershipAuditLog data={props.audit.data} /></li></div>;
         return <tr><td><img src={membership}></img></td><td>{time}</td><MembershipAuditLog action={actions[props.audit.action]} data={props.audit.data} /></tr>;
       case 'environments':
         return <tr><td><img src={environment}></img></td><td>{time}</td><EnvironmentAuditLog action={actions[props.audit.action]} data={props.audit.data} /></tr>;

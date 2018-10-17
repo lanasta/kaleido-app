@@ -1,11 +1,16 @@
 $black : #000000;
 $white : #ffffff;
-$darkpurple : #3942c1;
-$darkerpurple : #2F369D;
-$fadedpurple : #EFF0FA;
-$lightpurple : #C1C5EB;
+$dark-purple : #3942c1;
+$darker-purple : #2F369D;
+$faded-purple : #EFF0FA;
+$light-purple : #C1C5EB;
 $gray-border: #cccccc;
+$hot-pink: #ee34a8;
 
+
+$title-size: 28px;
+$subtitle-size: 18px;
+$title-line-height: 150%;
 $border-radius: 2px;
 
 body{
@@ -27,10 +32,27 @@ body{
 .App-header {
   height: 80px;
   padding: 20px 0;
-  background: #f2f2f2;
+  color: $white;
+  background: $dark-purple;
+  background-size: cover;
+  background-position: center;
+
   .wrapper{
     padding: 0;
     margin: 25px auto 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+
+  .navIcons{
+    display:flex;
+    .navIcons-fa{
+      margin-top: 5px;
+      font-size: 1.6em;
+      padding: 0 15px;
+    }
   }
 }
 
@@ -38,9 +60,29 @@ body{
   font-size: 1.5em;
 }
 
+.overlay{
+  background-color: rgba(50,50,50, 0.4);
+  width: 100%;
+  padding: 20px 0;
+  height: 80px;
+  margin: -20px 0;
+}
+
 .wrapper {
   width: 80%;
-  margin: 5% auto;
+  margin: 3% auto 6%;
+}
+
+.consortiumName{
+  font-weight:700;
+  font-size: $title-size;
+  line-height: $title-line-height;
+}
+
+.consortiumDescription{
+  font-size: $subtitle-size;
+  line-height: $title-line-height;
+  font-weight: 300;
 }
 
 table.kaleidoTable{
@@ -50,6 +92,11 @@ table.kaleidoTable{
   margin: 0 auto;
   box-shadow: 1px 1px 2px $gray-border;
   border-collapse: collapse;
+  font-weight: 300;
+
+  b{
+    font-weight: 400;
+  }
 
   tr th{
     padding: 0;
@@ -57,7 +104,7 @@ table.kaleidoTable{
     text-transform: uppercase;
     font-weight: 400;
     font-size: 16px;
-    background: $darkpurple;
+    background: $dark-purple;
     color: $white;
     height: 35px;
   }

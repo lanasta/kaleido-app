@@ -25,8 +25,8 @@ function getEndpoint(req,res, path){
         })
 }
 
-app.get('/consortia',bodyParser.json(), function(req, res, path){
-  getEndpoint(req, res, "consortia");
+app.get('/consortium',bodyParser.json(), function(req, res, path){
+  getEndpoint(req, res, "consortia/u0f9prinmz");
 });
 
 app.get('/invitations',bodyParser.json(), function(req, res, path){
