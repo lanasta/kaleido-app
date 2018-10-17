@@ -8,15 +8,13 @@ import './App.scss'; // or `.scss` if you chose scss
 import './App.min.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import consortium from './images/consortium.svg'
+import membership from './images/membership.svg'
+import environment from './images/environment.svg'
+import node from './images/node.svg'
+import invitation from './images/invitation.svg'
+
 library.add(far)
-
-// import Image from './images/img.png'; // Import using relative path
-
-// const styles = {
-//     customListStyle: {
-//         listStyleImage: 'url('+ Image +')'
-//     }
-// };
 
 class App extends Component {
   state = {
@@ -63,66 +61,69 @@ class App extends Component {
   }
 
   render() {
-    let actionPhrase = {
-      "create" : "Created",
-      "update" : "Updated",
-      "delete" : "Deleted"
-    }
-
     return (
       <div className="App">
         <header className="App-header">
         </header>
-        <p className="App-intro">{JSON.stringify(this.state.consortia, null, 2) }</p>
+        {/* <p className="App-intro">{JSON.stringify(this.state.consortia, null, 2) }</p>
         <p className="App-intro">{JSON.stringify(this.state.invitations, null, 2) }</p>
-        <p className="App-intro">{JSON.stringify(this.state.memberships, null, 2) }</p>
-        <div className="App-intro"><ul className='cephThemeList'>{this.renderAuditLog()}</ul></div>
+        <p className="App-intro">{JSON.stringify(this.state.memberships, null, 2) }</p> */}
+        <div className="App-intro"><ul className='kaleidoList'>{this.renderAuditLog()}</ul></div>
       </div>
     );
   }
 }
 
 function StatusSymbol(props){
-  console.log(props);
     switch(props.state) {
       case 'sent':
-        return <FontAwesomeIcon icon={['far', 'paper-plane']} />;
+        return <FontAwesomeIcon className='audit-fa neutral' icon={['far', 'paper-plane']} />;
       case 'accepted':
-        return <FontAwesomeIcon icon={['far', 'user-check']} />;
+        return <FontAwesomeIcon className='audit-fa green' icon={['far', 'user-check']} />;
       case 'declined':
-        return <FontAwesomeIcon icon={['far', 'user-times']} />;
+        return <FontAwesomeIcon className='audit-fa alert' icon={['far', 'user-times']} />;
       case 'initializing':
-        return <FontAwesomeIcon icon={['far', 'spinner']} />;
+        return <FontAwesomeIcon className='audit-fa neutral' icon={['far', 'spinner']} />;
       case 'started':
-        return <FontAwesomeIcon icon={['far', 'cogs']} />;
+        return <FontAwesomeIcon className='audit-fa green' icon={['far', 'cogs']} />;
+      case 'active':
+        return <FontAwesomeIcon className='audit-fa green' icon={['far', 'plug']} />;
+      case 'setup':
+        return <FontAwesomeIcon className='audit-fa neutral' icon={['far', 'wrench']} />;
+      case 'live':
+        return <FontAwesomeIcon className='audit-fa green' icon={['far', 'globe']} />;
       default:
         return null;
     }
 }
 
 function ConsortiaAuditLog(props){
-  return  <>consortia <b> {props.data.name} </b> owned by <b> {props.data.owner_org_name}  </b></>;
+  return  <>consortia <b> {props.data.name} </b> owned by <b> {props.data.owner_org_name}</b><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></>;
 }
 
 function MembershipAuditLog(props){
-  return  <>membership <b>{props.data.org_name}</b></>;
+  return  <>membership <b>{props.data.org_name}</b><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></>;
 }
 
 function EnvironmentAuditLog(props){
-  return  <>environment <b> {props.data.name}</b> with consensus type <b>{props.data.consensus_type}</b> and provider <b>{props.data.provider}</b></>;
+  return  <>environment <b> {props.data.name}</b> with consensus type <b>{props.data.consensus_type}</b> and provider <b>{props.data.provider}</b><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></>;
 }
 
 function NodeAuditLog(props){
-  return  <>node <b> {props.data.name}</b> with the role of a <b>{props.data.role}</b>, status: <b>{props.data.state}</b> <StatusSymbol state={props.data.state}/></>;
+  return  <>node <b> {props.data.name}</b> with the role <b>{props.data.role}</b><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></>;
 }
 
 function InvitationAuditLog(props){
-  return  <>invitation to <b> {props.data.org_name}</b> , status: <b>{props.data.state}</b> <StatusSymbol state={props.data.state}/></>;
+  return  <>invitation to <b> {props.data.org_name}</b><div className='statusBox'><StatusSymbol state={props.data.state}/>{props.data.state}</div></>;
+}
+
+function auditType(){
+  return <><img src={consortium}></img></>;
 }
 
 function AuditLog(props){
   let penIcon = <FontAwesomeIcon icon={['far', 'pen-alt']} />
-  let time = <>At {(new Date(props.audit.timestamp).toLocaleString())}: </>;
+  let time = <>{(new Date(props.audit.timestamp).toLocaleString())}: </>;
   let actions = {
     "create" : "created",
     "update" : "updated",
@@ -130,15 +131,15 @@ function AuditLog(props){
   }
   switch(props.audit.objectType) {
      case 'consortia':
-       return <li>{penIcon} {time}{actions[props.audit.action]} <ConsortiaAuditLog data={props.audit.data} /></li>;
+       return <div className='auditEntry'><img src={consortium}></img><li>{time}{actions[props.audit.action]} <ConsortiaAuditLog data={props.audit.data} /></li></div>;
       case 'memberships':
-        return <li>{penIcon} {time}{actions[props.audit.action]} <MembershipAuditLog data={props.audit.data} /></li>;
+        return <div className='auditEntry'><img src={membership}></img><li>{time}{actions[props.audit.action]} <MembershipAuditLog data={props.audit.data} /></li></div>;
       case 'environments':
-        return <li>{penIcon} {time}{actions[props.audit.action]} <EnvironmentAuditLog data={props.audit.data} /></li>;
+        return <div className='auditEntry'><img src={environment}></img><li>{time}{actions[props.audit.action]} <EnvironmentAuditLog data={props.audit.data} /></li></div>;
       case 'nodes':
-        return <li>{penIcon} {time}{actions[props.audit.action]} <NodeAuditLog data={props.audit.data} /></li>;
+        return <div className='auditEntry'><img src={node}></img> <li>{time}{actions[props.audit.action]} <NodeAuditLog data={props.audit.data} /></li></div>;
       case 'invitations':
-        return <li>{penIcon} {time}{actions[props.audit.action]} <InvitationAuditLog data={props.audit.data} /></li>;
+        return <div className='auditEntry'><img src={invitation}></img><li>{time}{actions[props.audit.action]} <InvitationAuditLog data={props.audit.data} /></li></div>;
       default:
         return null;
   }
