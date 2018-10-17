@@ -41,6 +41,10 @@ app.get('/audits',bodyParser.json(), function(req, res, path){
   getEndpoint(req, res, "audit/u0f9prinmz");
 });
 
+app.get('/environments',bodyParser.json(), function(req, res, path){
+  getEndpoint(req, res, "consortia/u0f9prinmz/environments");
+});
+
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, 'client/build')));
