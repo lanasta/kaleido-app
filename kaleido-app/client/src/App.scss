@@ -4,14 +4,12 @@ $white : #ffffff;
 $border-radius: 2px;
 
 body{
-  background : $black;
-  color: $white;
+  background : $white;
+  color: $black;
 }
 
 .App {
   text-align: left;
-  background : $black;
-  color: $white;
 }
 
 .App-logo {
@@ -33,6 +31,14 @@ body{
 .App-intro {
   font-size: large;
 }
+
+ul.cephThemeList{
+  padding: 0;
+  li{
+    list-style: none;
+  }
+}
+
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
