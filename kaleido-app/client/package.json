@@ -69,10 +69,6 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],
-    "resolver": "/Users/asl/Desktop/frontend-challenge/kaleido-app/client/node_modules/jest-pnp-resolver/index.js",
-    "setupFiles": [
-      "/Users/asl/Desktop/frontend-challenge/kaleido-app/client/node_modules/react-app-polyfill/jsdom.js"
-    ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx}",
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx}"

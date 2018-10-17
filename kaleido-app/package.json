@@ -1,11 +1,10 @@
 {
   "name": "kaleido-app",
   "version": "1.0.0",
-  "description": "Example on using create-react-app with a Node Express Backend",
+  "description": "Kaleido Front End Challenge App",
   "author": {
-    "name": "Esau Silva",
-    "email": "esausilva85@gmail.com",
-    "url": "https://esausilva.com"
+    "name": "Anastasia Lalamentik",
+    "url": "https://lanasta.github.io"
   },
   "license": "MIT",
   "scripts": {
@@ -25,13 +24,6 @@
     "concurrently": "^4.0.1",
     "node-sass": "^4.9.4",
     "sass-loader": "^7.1.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/esausilva/example-create-react-app-express.git"
-  },
-  "bugs": {
-    "url": "https://github.com/esausilva/example-create-react-app-express/issues"
   },
   "keywords": [
     "node",
