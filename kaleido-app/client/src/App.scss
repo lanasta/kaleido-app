@@ -1,8 +1,10 @@
 $black : #000000;
 $white : #ffffff;
 $darkpurple : #3942c1;
+$darkerpurple : #2F369D;
 $fadedpurple : #EFF0FA;
 $lightpurple : #C1C5EB;
+$gray-border: #cccccc;
 
 $border-radius: 2px;
 
@@ -14,7 +16,6 @@ body{
 
 .App {
   text-align: left;
-  width: 80%;
   margin: 0 auto;
 }
 
@@ -24,33 +25,64 @@ body{
 }
 
 .App-header {
-  height: 70px;
-  padding: 20px;
+  height: 80px;
+  padding: 20px 0;
+  background: #f2f2f2;
+  .wrapper{
+    padding: 0;
+    margin: 25px auto 0;
+  }
 }
 
 .App-title {
   font-size: 1.5em;
 }
 
-.App-intro {
-  font-size: large;
+.wrapper {
+  width: 80%;
+  margin: 5% auto;
 }
 
-ul.kaleidoList{
+table.kaleidoTable{
   padding: 0;
-  li{
-    list-style: none;
-    padding: 2px 0;
+  width: 100%;
+  font-size: 16px;
+  margin: 0 auto;
+  box-shadow: 1px 1px 2px $gray-border;
+  border-collapse: collapse;
+
+  tr th{
+    padding: 0;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 16px;
+    background: $darkpurple;
+    color: $white;
+    height: 35px;
   }
-}
 
-.auditEntry{
-  display:flex;
-  flex-direction: row;
-  padding: 5px 0;
+  tr th:nth-child(1), tr td:nth-child(1){
+    border-left: 1px solid $gray-border;
+  }
 
+  tr td, tr th{
+    padding: 5px;
+    text-align: center;
+    border-top: 1px solid $gray-border;
+    border-right: none;
+  }
+
+  tr td:nth-child(3){
+    text-align: left;
+  }
+
+  tr:last-child td{
+    border-bottom: 1px solid $gray-border;
+  }
   img{
-    margin-right: 10px;
+    padding: 0 2px;
+    padding-top: 2px;
     width: 26px;
     height: 26px;
   }
@@ -69,18 +101,21 @@ ul.kaleidoList{
 }
 
 .audit-fa{
+  margin-left: 5px;
+}
+
+.status-fa{
   margin-right: 5px;
 }
 
 .statusBox{
   border-radius: 5px;
-  border: 1px solid $lightpurple;
-  display: inline;
   width: auto;
+  text-align: center;
   margin: 0 5px;
   padding: 2px 6px;
-  font-size: 16px;
-  box-shadow: 1px 1px 2px $fadedpurple;
+  font-size: 14px;
+  text-transform: capitalize;
 }
 
 @keyframes App-logo-spin {
