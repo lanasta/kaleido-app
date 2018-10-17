@@ -8,9 +8,9 @@ const port = process.env.PORT || 5000;
 
 const API_KEY = 'u0xeyvnwh6-+af/unzTeOHfVs1Ds5azlXxjFXqRflILCiQqbtvEEzo=';
 
-function getConsortium(req,res){
+function getEndpoint(req,res, path){
         requestPromise({
-            uri : 'https://console.kaleido.io/api/v1/consortia',
+            uri : 'https://console.kaleido.io/api/v1/' + path,
             headers : {
                 'Authorization' : `Bearer ${API_KEY}`
             },
@@ -25,10 +25,20 @@ function getConsortium(req,res){
         })
 }
 
-app.get('/consortia',bodyParser.json(), getConsortium);
-// API calls
-app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
+app.get('/consortia',bodyParser.json(), function(req, res, path){
+  getEndpoint(req, res, "consortia");
+});
+
+app.get('/invitations',bodyParser.json(), function(req, res, path){
+  getEndpoint(req, res, "consortia/u0f9prinmz/invitations");
+});
+
+app.get('/memberships',bodyParser.json(), function(req, res, path){
+  getEndpoint(req, res, "consortia/u0f9prinmz/memberships");
+});
+
+app.get('/audits',bodyParser.json(), function(req, res, path){
+  getEndpoint(req, res, "audit/u0f9prinmz");
 });
 
 if (process.env.NODE_ENV === 'production') {
