@@ -86,7 +86,7 @@ class App extends Component {
               }
             ]}
           ]});
-        this.highChartsRender();
+        this.highChartsRender(this.state);
       }).catch(err => console.log(err));
 
     this.getEndpoint("memberships")
@@ -105,13 +105,11 @@ class App extends Component {
   getEndpoint = async (endpointName) => {
     const response = await fetch('/' + endpointName);
     const body = await response.json();
-    console.log(body);
     if (response.status !== 200) throw Error(body.message);
     return body;
   };
 
-  highChartsRender() {
-    console.log(this.state);
+  highChartsRender(props) {
   	Highcharts.chart({
         credits: false,
   	    chart: {
@@ -127,10 +125,7 @@ class App extends Component {
             layout: 'horizontal',
             align: 'right',
             floating: true,
-            backgroundColor: '#FFFFFF',
-            style: {
-              fontWeight: 300
-            }
+            backgroundColor: '#FFFFFF'
           }
   	    },
   	    title: {
@@ -143,7 +138,12 @@ class App extends Component {
   	    },
         legend: {
             itemStyle: {
+                fontSize: '14px',
                 fontWeight: '300'
+            },
+            labelFormatter: function() {
+              let count = props.invitationStates[(this.name).toLowerCase()];
+              return this.name + ": <b>" + count + "</b>";
             }
         },
   	    plotOptions: {
@@ -187,7 +187,6 @@ class App extends Component {
   }
 
   renderConsortiumInfo(){
-    console.log(this.state.consortium);
     return <><div className='consortiumName'>{this.state.consortium.name}</div><div className='consortiumDescription'>{this.state.consortium.description}</div></>;
   }
 
@@ -211,7 +210,7 @@ class App extends Component {
         <p className="App-intro">{JSON.stringify(this.state.invitations, null, 2) }</p>
         <p className="App-intro">{JSON.stringify(this.state.memberships, null, 2) }</p> */}
         <div className="wrapper">
-          <div className="column consortiumInfo">{this.renderConsortiumInfo()}</div>
+          <div className="column consortiumInfo"><img alt="" src={consortium}></img>{this.renderConsortiumInfo()}</div>
           <div className="flexGridThree">
             <div className="column">
               <div className="columnHeader">Overview<FontAwesomeIcon className='right-fa' icon={['far', 'info-circle']} /></div>

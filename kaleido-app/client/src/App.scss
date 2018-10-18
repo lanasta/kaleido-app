@@ -87,7 +87,15 @@ div{
   margin: 3% auto 6%;
 }
 
+.consortiumInfo img{
+  display: inline;
+  width: 26px;
+  height: auto;
+}
+
 .consortiumName{
+  display: inline;
+  margin-left: 10px;
   font-weight:$fw-bold;
   font-size: $title-size;
   line-height: $title-line-height;
