@@ -10,18 +10,20 @@ $hot-pink: #ee34a8;
 $title-size: 28px;
 $subtitle-size: 18px;
 $title-line-height: 150%;
-$border-radius: 205px;
+$header-height: 40px;
+$border-radius: 2px;
 
 $fw-light: 300;
 $fw-regular: 400;
 $fw-bold: 700;
 
+:not(svg){
+  box-sizing: border-box;
+}
 
 body{
   background : $white;
   color: $black;
-  border-spacing:flex;
-
   font-family: 'Lato', 'Helvetica', sans-serif;
 }
 
@@ -40,7 +42,7 @@ div{
 }
 
 .App-header {
-  height: 80px;
+  height: 110px;
   padding: 20px 0;
   color: $white;
   background: $dark-purple;
@@ -134,7 +136,7 @@ table.kaleidoTable{
     font-size: 16px;
     background: $dark-purple;
     color: $white;
-    height: 35px;
+    height: $header-height;
   }
 
   tr th:nth-child(1), tr td:nth-child(1){
@@ -173,6 +175,7 @@ table.kaleidoTable{
     border: 1px solid $gray-border;
     min-height: 180px;
     max-height: 250px;
+    border-radius: $border-radius;
   }
 
   .column:first-child{
@@ -195,9 +198,10 @@ table.kaleidoTable{
   font-size: 16px;
   background: $dark-purple;
   color: $white;
-  height: 35px;
-  line-height: 35px;
+  height: $header-height;
+  line-height: $header-height;
   padding: 0 10px;
+  border-radius: $border-radius;
 }
 
 .green{
@@ -220,7 +224,7 @@ table.kaleidoTable{
   margin-right: 5px;
 }
 
-.statusBox{
+.auditStatus{
   width: auto;
   text-align: center;
   margin: 0 5px;
@@ -286,7 +290,17 @@ table.kaleidoTable{
 #invitationsChart{
   margin: 0 auto;
   width: 98%;
-  height: 200px;
+  height: 205px;
+}
+
+.squid{
+  width: 100%;
+  margin: 5% auto;
+  img {
+    display: block;
+    width: 400px;
+    margin: 0 auto;
+  }
 }
 
 // @keyframes App-logo-spin {
@@ -307,6 +321,11 @@ table.kaleidoTable{
     margin: 5% auto;
   }
 
+  .navIcons-fa{
+    font-size: 1.2em;
+    padding: 0 8px;
+  }
+
   table.kaleidoTable{
     font-size:14px;
     margin-top: 5%;
@@ -319,7 +338,7 @@ table.kaleidoTable{
     }
   }
 
-  .statusBox{
+  .auditStatus{
     font-size: 12px;
   }
 }

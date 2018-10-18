@@ -3,8 +3,8 @@ const path = require('path');
 const requestPromise = require('request-promise');
 const bodyParser = require('body-parser');
 const app = express();
+const server = require('http').createServer(app);
 const port = process.env.PORT || 5000;
-
 
 const API_KEY = 'u0xeyvnwh6-+af/unzTeOHfVs1Ds5azlXxjFXqRflILCiQqbtvEEzo=';
 
@@ -16,7 +16,6 @@ function getEndpoint(req,res, path){
             },
             json :true
         }).then((resp)=>{
-          console.log(resp);
             res.send(resp);
         }).catch((error)=>{
             if(error.statusCode && error.message) res.status(error.statusCode).send(error.message);
@@ -55,4 +54,5 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+// app.listen(port, () => console.log(`Listening on port ${port}`));
+server.listen(port, () => console.log(`Listening on port ${port}`));

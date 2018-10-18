@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Highcharts from 'highcharts';
+import WOW from "wowjs";
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { far } from '@fortawesome/pro-regular-svg-icons'
@@ -10,27 +11,51 @@ import './App.min.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import logo from './images/logo.svg'
+import squid from './images/s1.png'
 import consortium from './images/consortium.svg'
 import membership from './images/membership.svg'
 import environment from './images/environment.svg'
 import node from './images/node.svg'
 import invitation from './images/invitation.svg'
 
+
 library.add(far)
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.chartCol= React.createRef();
+    this.updateChartYVal = this.updateChartYVal;
+}
+
   state = {
+    loading: true,
     consortium: '',
     invitations: '',
     invitationStates: {},
     memberships: '',
     audits: '',
     environments: '',
-    series: []
+    series: [],
+    timestamp: '',
+    chartYVal: -3,
+    colors: ['#00cd79', '#fa9a43', '#ee34a8']
   };
 
   componentDidMount() {
     document.title = "Anastasia's Kaleido App";
+    this.getData();
+    this.timer = setInterval(()=> this.getData(), 1000);
+    const wow = new WOW.WOW();
+    wow.init();
+  }
+
+  componentWillUnmount() {
+    this.timer = null;
+  }
+
+  getData() {
+    this.setState({invitationStates:{}});
     this.getEndpoint("consortium")
       .then(res => this.setState({ consortium: res }))
       .catch(err => console.log(err));
@@ -39,31 +64,16 @@ class App extends Component {
         this.setState({ invitations: res });
         for (var i in res){
           let state = res[i].state;
-          if (this.state.invitationStates[state] == null){
-            this.state.invitationStates[state] = 1;
+          let invitationStates = this.state.invitationStates;
+          if (invitationStates[state] == null){
+            invitationStates[state] = 1;
           } else {
-            this.state.invitationStates[state] += 1;
+            invitationStates[state] += 1;
           }
+          this.setState({invitationStates: invitationStates});
         }
         let states = this.state.invitationStates;
-        let data = [
-            {
-              name: 'Accepted',
-              y: states.accepted,
-              color: '#00cd79'
-            },
-            {
-              name: 'Sent',
-              y: states.sent,
-              color: '#fa9a43'
-            },
-            {
-              name: 'Declined',
-              y: states.declined,
-              color: '#ee34a8'
-            }
-          ];
-          this.setState({ series: [{
+        this.setState({ series: [{
             name: 'Invitations',
             dataLabels: {
               enabled: false
@@ -72,17 +82,17 @@ class App extends Component {
               {
                 name: 'Accepted',
                 y: states.accepted,
-                color: '#00cd79'
+                color: this.state.colors[0]
               },
               {
                 name: 'Sent',
                 y: states.sent,
-                color: '#fa9a43'
+                color: this.state.colors[1]
               },
               {
                 name: 'Declined',
                 y: states.declined,
-                color: '#ee34a8'
+                color: this.state.colors[2]
               }
             ]}
           ]});
@@ -100,6 +110,8 @@ class App extends Component {
     this.getEndpoint("audits")
       .then(res => this.setState({ audits: res.reverse() }))
       .catch(err => console.log(err));
+
+    setTimeout(()=> this.setState({loading: false}), 2000);
   }
 
   getEndpoint = async (endpointName) => {
@@ -115,6 +127,8 @@ class App extends Component {
   	    chart: {
   	      type: 'pie',
   	      renderTo: 'invitationsChart',
+          marginTop: 0,
+          marginBottom: 45,
           style : {
             fontFamily: 'Lato',
             fontWeight: '700',
@@ -122,16 +136,20 @@ class App extends Component {
             margin: '0'
           }, legend : {
             enabled: true,
-            layout: 'horizontal',
+            layout: 'vertical',
             align: 'right',
-            floating: true,
-            backgroundColor: '#FFFFFF'
+            floating: false,
+            backgroundColor: '#FFFFFF',
+ verticalAlign: 'bottom',
           }
   	    },
-  	    title: {
+        title: {
+          text: null
+        },
+  	    subtitle: {
   	      verticalAlign: 'middle',
   	      text: `${this.state.invitations.length}`,
-          y: -3,
+          y: -5,
   	      style: {
   	      	fontSize: '36px',
   	      }
@@ -139,6 +157,8 @@ class App extends Component {
         legend: {
             itemStyle: {
                 fontSize: '14px',
+                margin: 0,
+                padding: 0,
                 fontWeight: '300'
             },
             labelFormatter: function() {
@@ -152,7 +172,11 @@ class App extends Component {
             showInLegend: true
   	      },
           legend : {
-            enabled: true
+            enabled: true,
+            floating: false
+          },
+          series : {
+            animation: false
           }
   	    },
   	    series: this.state.series
@@ -191,10 +215,11 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <div className="App">
+    while (this.state.loading){
+      return (
+        <div className="App">
+
         <header className="App-header">
-          <div className="">
             <div className="wrapper">
               <div className='logo'><img alt="" src={logo} width='180'></img></div>
               <div className='navIcons'>
@@ -204,11 +229,24 @@ class App extends Component {
                 <FontAwesomeIcon className='navIcons-fa' icon={['far', 'sign-out']} />
               </div>
             </div>
-          </div>
         </header>
-        {/* <p className="App-intro">{JSON.stringify(this.state.consortium, null, 2) }</p>
-        <p className="App-intro">{JSON.stringify(this.state.invitations, null, 2) }</p>
-        <p className="App-intro">{JSON.stringify(this.state.memberships, null, 2) }</p> */}
+        <div className="squid wow rubberBand"><img alt="" src={squid}></img></div>
+      </div>
+      );
+    }
+    return (
+      <div className="App">
+        <header className="App-header">
+            <div className="wrapper">
+              <div className='logo'><img alt="" src={logo} width='180'></img></div>
+              <div className='navIcons'>
+                <FontAwesomeIcon className='navIcons-fa' icon={['far', 'question-circle']} />
+                <FontAwesomeIcon className='navIcons-fa' icon={['far', 'user']} />
+                <FontAwesomeIcon className='navIcons-fa' icon={['far', 'wrench']} />
+                <FontAwesomeIcon className='navIcons-fa' icon={['far', 'sign-out']} />
+              </div>
+            </div>
+        </header>
         <div className="wrapper">
           <div className="column consortiumInfo"><img alt="" src={consortium}></img>{this.renderConsortiumInfo()}</div>
           <div className="flexGridThree">
@@ -226,7 +264,7 @@ class App extends Component {
                 <ul>{this.renderMembersList()}</ul>
               </div>
             </div>
-            <div className="column">
+            <div className="column" ref="chartCol">
               <div className="columnHeader">Invitations<FontAwesomeIcon className='right-fa' icon={['far', 'envelope']} /></div>
               <div id="invitationsChart"></div>
             </div>
@@ -273,23 +311,23 @@ function StatusSymbol(props){
 }
 
 function ConsortiumAuditLog(props){
-  return  <><td>{props.action} consortium <b> {props.data.name} </b> owned by <b> {props.data.owner_org_name}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
+  return  <><td>{props.action} consortium <b> {props.data.name} </b> owned by <b> {props.data.owner_org_name}</b></td><td><div className='auditStatus'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function MembershipAuditLog(props){
-  return  <><td>{props.action} membership <b>{props.data.org_name}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
+  return  <><td>{props.action} membership <b>{props.data.org_name}</b></td><td><div className='auditStatus'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function EnvironmentAuditLog(props){
-  return  <><td>{props.action} environment <b> {props.data.name}</b> with consensus type <b>{props.data.consensus_type}</b> and provider <b>{props.data.provider}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
+  return  <><td>{props.action} environment <b> {props.data.name}</b> with consensus type <b>{props.data.consensus_type}</b> and provider <b>{props.data.provider}</b></td><td><div className='auditStatus'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function NodeAuditLog(props){
-  return  <><td>{props.action} node <b> {props.data.name}</b> with role <b>{props.data.role}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
+  return  <><td>{props.action} <b> {props.data.membership_name}</b> node <b> {props.data.name}</b> with role <b>{props.data.role}</b> in environment <b>{props.data.environment_name}</b></td><td><div className='auditStatus'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function InvitationAuditLog(props){
-  return  <><td>{props.action} invitation to <b> {props.data.org_name}</b></td><td><div className='statusBox'><StatusSymbol state={props.data.state}/></div></td></>;
+  return  <><td>{props.action} invitation to <b> {props.data.org_name}</b></td><td><div className='auditStatus'><StatusSymbol state={props.data.state}/></div></td></>;
 }
 
 function AuditLog(props){
