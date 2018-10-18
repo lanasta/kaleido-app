@@ -1,4 +1,4 @@
-# create-react-app React Project with Node Express Backend
+# Anastasia's Kaleido App
 
 > Example on using create-react-app with a Node Express Backend
 
@@ -25,7 +25,3 @@ npm run dev
 ```
 
 Running the production build on localhost. This will create a production build, then Node will serve the app on http://localhost:3000
-
-## About
-
-This is a project built for Kaleido's front-end challenge built by Anastasia Lalamentik.
