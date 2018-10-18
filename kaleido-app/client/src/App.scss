@@ -7,16 +7,26 @@ $light-purple : #C1C5EB;
 $gray-border: #cccccc;
 $hot-pink: #ee34a8;
 
-
 $title-size: 28px;
 $subtitle-size: 18px;
 $title-line-height: 150%;
-$border-radius: 2px;
+$border-radius: 205px;
+
+$fw-light: 300;
+$fw-regular: 400;
+$fw-bold: 700;
+
 
 body{
   background : $white;
   color: $black;
+  border-spacing:flex;
+
   font-family: 'Lato', 'Helvetica', sans-serif;
+}
+
+div{
+  box-sizing: border-box;
 }
 
 .App {
@@ -54,6 +64,10 @@ body{
       padding: 0 15px;
     }
   }
+
+  .navIcons:hover{
+    cursor: pointer;
+  }
 }
 
 .App-title {
@@ -74,7 +88,7 @@ body{
 }
 
 .consortiumName{
-  font-weight:700;
+  font-weight:$fw-bold;
   font-size: $title-size;
   line-height: $title-line-height;
 }
@@ -82,27 +96,33 @@ body{
 .consortiumDescription{
   font-size: $subtitle-size;
   line-height: $title-line-height;
-  font-weight: 300;
+  font-weight: $fw-light;
+}
+
+.sectionTitle{
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: $fw-bold;
+  margin-bottom: 2%;
 }
 
 table.kaleidoTable{
   padding: 0;
   width: 100%;
   font-size: 16px;
-  margin: 0 auto;
   box-shadow: 1px 1px 2px $gray-border;
   border-collapse: collapse;
-  font-weight: 300;
+  font-weight: $fw-light;
 
   b{
-    font-weight: 400;
+    font-weight: $fw-regular;
   }
 
   tr th{
     padding: 0;
     margin: 0;
     text-transform: uppercase;
-    font-weight: 400;
+    font-weight: $fw-regular;
     font-size: 16px;
     background: $dark-purple;
     color: $white;
@@ -127,12 +147,49 @@ table.kaleidoTable{
   tr:last-child td{
     border-bottom: 1px solid $gray-border;
   }
+
   img{
     padding: 0 2px;
     padding-top: 2px;
     width: 26px;
     height: 26px;
   }
+}
+
+.flexGridThree {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  .column{
+    width: 32%;
+    border: 1px solid $gray-border;
+    min-height: 180px;
+    max-height: 250px;
+  }
+
+  .column:first-child{
+    margin-left: 0;
+  }
+
+  .column:last-child{
+    margin-right: 0;
+  }
+}
+
+.column {
+  width: 100%;
+  margin: 0 auto 3%;
+}
+
+.columnHeader{
+  text-transform: uppercase;
+  font-weight: $fw-regular;
+  font-size: 16px;
+  background: $dark-purple;
+  color: $white;
+  height: 35px;
+  line-height: 35px;
+  padding: 0 10px;
 }
 
 .green{
@@ -147,7 +204,7 @@ table.kaleidoTable{
   color: #BA0000;
 }
 
-.audit-fa{
+.right-fa{
   margin-left: 5px;
 }
 
@@ -156,7 +213,6 @@ table.kaleidoTable{
 }
 
 .statusBox{
-  border-radius: 5px;
   width: auto;
   text-align: center;
   margin: 0 5px;
@@ -165,7 +221,97 @@ table.kaleidoTable{
   text-transform: capitalize;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.overview{
+  width: 95%;
+  padding: 5px;
+  margin: 2% auto;
+  text-align: left;
+}
+
+.overviewElement{
+  width: 180px;
+  margin: 5% auto;
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: $fw-light;
+  min-width: 180px;
+  display: flex;
+  flex-direction: row;
+
+  img{
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+  }
+
+  .propertyCount{
+    margin: 0 5px;
+    font-weight: $fw-bold;
+    font-size: 26px;
+  }
+}
+
+.membersList{
+  padding: 10px;
+  overflow: scroll;
+  height:210px;
+}
+
+.memberList ul{
+  list-style-image: url("./images/membership.svg");
+  padding: 0;
+  margin: 0;
+}
+
+.membersList ul li{
+  margin: 0;
+  height: 26px;
+  font-weight: $fw-light;
+  background-image: url("./images/membership.svg");
+  background-repeat: no-repeat;
+  padding-left: 30px;
+  padding-top: 3px;
+  list-style-type: none;
+  margin: 2% auto;
+}
+
+#invitationsChart{
+  margin: 0 auto;
+  width: 98%;
+  height: 200px;
+}
+
+// @keyframes App-logo-spin {
+//   from { transform: rotate(0deg); }
+//   to { transform: rotate(360deg); }
+// }
+
+@media (max-width: 750px) {
+  .flexGridThree {
+    flex-wrap: wrap;
+    .column{
+      width: 100%;
+      margin: 5% auto;
+    }
+  }
+
+  .sectionTitle{
+    margin: 5% auto;
+  }
+
+  table.kaleidoTable{
+    font-size:14px;
+    margin-top: 5%;
+    img{
+      width: 20px;
+      height:20px;
+    }
+    tr th{
+      font-size: 14px;
+    }
+  }
+
+  .statusBox{
+    font-size: 12px;
+  }
 }
