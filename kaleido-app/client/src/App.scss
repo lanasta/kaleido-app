@@ -298,7 +298,7 @@ table.kaleidoTable{
   margin: 5% auto;
   img {
     display: block;
-    width: 400px;
+    width: 420px;
     margin: 0 auto;
   }
 }
@@ -340,5 +340,10 @@ table.kaleidoTable{
 
   .auditStatus{
     font-size: 12px;
+  }
+
+  .squid img{
+    margin-top: 10%;
+    width: 300px;
   }
 }
