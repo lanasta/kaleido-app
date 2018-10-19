@@ -45,7 +45,9 @@ class App extends Component {
   componentDidMount() {
     document.title = "Anastasia's Kaleido App";
     this.getData();
-    this.timer = setInterval(()=> this.getData(), 1000);
+    this.timer = setInterval(() => {
+        this.getData();
+    }, 2000);
     const wow = new WOW.WOW();
     wow.init();
   }
@@ -62,16 +64,20 @@ class App extends Component {
     this.getEndpoint("invitations")
       .then(res => {
         this.setState({ invitations: res });
+        let invitationStates = {
+          'accepted' : 0,
+          'declined' : 0,
+          'sent' : 0
+        };
         for (var i in res){
           let state = res[i].state;
-          let invitationStates = this.state.invitationStates;
           if (invitationStates[state] == null){
             invitationStates[state] = 1;
           } else {
             invitationStates[state] += 1;
           }
-          this.setState({invitationStates: invitationStates});
         }
+        this.setState({invitationStates: invitationStates});
         let states = this.state.invitationStates;
         this.setState({ series: [{
             name: 'Invitations',
