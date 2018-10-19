@@ -26,10 +26,12 @@ class App extends Component {
     super(props);
     this.chartCol= React.createRef();
     this.updateChartYVal = this.updateChartYVal;
+    this.wow = new WOW.WOW();
 }
 
   state = {
     loading: true,
+    timer: null,
     consortium: '',
     invitations: '',
     invitationStates: {},
@@ -39,30 +41,43 @@ class App extends Component {
     series: [],
     timestamp: '',
     chartYVal: -3,
-    colors: ['#00cd79', '#fa9a43', '#ee34a8']
+    colors: ['#00cd79', '#fa9a43', '#ee34a8'],
+    chartRendered: false
   };
 
   componentDidMount() {
     document.title = "Anastasia's Kaleido App";
+    setTimeout(()=> this.setState({loading: false}), 1000);
     this.getData();
-    this.timer = setInterval(() => {
+    this.setState({timer: setInterval(() => {
         this.getData();
-    }, 2000);
-    const wow = new WOW.WOW();
-    wow.init();
+    }, 1000)});
+    this.wow = new WOW.WOW();
+    this.wow.init();
   }
 
   componentWillUnmount() {
-    this.timer = null;
+    this.setState({timer: null});
+  }
+
+  changeInterval(){
+    clearInterval(this.state.timer);
+    this.setState({timer: setInterval(() => {
+        this.getData();
+    }, 3000)});
   }
 
   getData() {
+    console.log("fetc");
     this.setState({invitationStates:{}});
     this.getEndpoint("consortium")
       .then(res => this.setState({ consortium: res }))
       .catch(err => console.log(err));
     this.getEndpoint("invitations")
       .then(res => {
+        if (!this.state.loading){
+          this.changeInterval();
+        }
         this.setState({ invitations: res });
         let invitationStates = {
           'accepted' : 0,
@@ -102,22 +117,29 @@ class App extends Component {
               }
             ]}
           ]});
-        this.highChartsRender(this.state);
+          var chartDiv = document.getElementById('invitationsChart');
+          if (chartDiv != null){
+            this.highChartsRender(this.state);
+            this.setState({chartRendered: true});
+          }
+          this.wow.sync();
       }).catch(err => console.log(err));
 
     this.getEndpoint("memberships")
-      .then(res => this.setState({ memberships: res }))
-      .catch(err => console.log(err));
+      .then(res => {
+          this.setState({ memberships: res });
+          this.wow.sync();
+    }).catch(err => console.log(err));
 
     this.getEndpoint("environments")
-        .then(res => this.setState({ environments: res }))
-        .catch(err => console.log(err));
+        .then(res => {
+            this.setState({ environments: res });
+            this.wow.sync();
+      }).catch(err => console.log(err));
 
     this.getEndpoint("audits")
       .then(res => this.setState({ audits: res.reverse() }))
       .catch(err => console.log(err));
-
-    setTimeout(()=> this.setState({loading: false}), 2000);
   }
 
   getEndpoint = async (endpointName) => {
@@ -146,7 +168,7 @@ class App extends Component {
             align: 'right',
             floating: false,
             backgroundColor: '#FFFFFF',
- verticalAlign: 'bottom',
+            verticalAlign: 'bottom',
           }
   	    },
         title: {
@@ -182,7 +204,7 @@ class App extends Component {
             floating: false
           },
           series : {
-            animation: false
+            animation: !props.chartRendered ? true : false
           }
   	    },
   	    series: this.state.series
@@ -202,7 +224,7 @@ class App extends Component {
     let members = this.state.memberships;
     let membersUl = [];
     for (var i in members){
-      membersUl.push(<li key={members[i]._id} >{members[i].org_name}</li>);
+      membersUl.push(<li className="wow fadeIn" data-wow-delay="0.3s" key={members[i]._id} >{members[i].org_name}</li>);
     }
     return membersUl;
   }
@@ -221,10 +243,9 @@ class App extends Component {
   }
 
   render() {
-    while (this.state.loading){
+    if (this.state.loading){
       return (
         <div className="App">
-
         <header className="App-header">
             <div className="wrapper">
               <div className='logo'><img alt="" src={logo} width='180'></img></div>
@@ -240,6 +261,7 @@ class App extends Component {
       </div>
       );
     }
+
     return (
       <div className="App">
         <header className="App-header">
@@ -259,9 +281,9 @@ class App extends Component {
             <div className="column">
               <div className="columnHeader">Overview<FontAwesomeIcon className='right-fa' icon={['far', 'info-circle']} /></div>
                 <div className="overview">
-                  <div className="overviewElement"><div className='col'><img alt="" src={membership}></img></div><div className='col'><span className="propertyCount">{this.state.memberships.length}</span> members</div></div>
-                  <div className="overviewElement"><div className='col'><img alt="" src={environment}></img></div><div className='col'><span className="propertyCount">{this.state.environments.length}</span> environments</div></div>
-                  <div className="overviewElement"><div className='col'><img alt="" src={node}></img></div><div className='col'><span className="propertyCount">{this.countTotalNodes()}</span> nodes</div></div>
+                  <div className="overviewElement"><div className='col'><img alt="" src={membership}></img></div><div className='col'><span className="propertyCount wow fadeIn" data-wow-delay="0.3s">{this.state.memberships.length}</span> members</div></div>
+                  <div className="overviewElement"><div className='col'><img alt="" src={environment}></img></div><div className='col'><span className="propertyCount wow fadeIn" data-wow-delay="0.3s">{this.state.environments.length}</span> environments</div></div>
+                  <div className="overviewElement"><div className='col'><img alt="" src={node}></img></div><div className='col'><span className="propertyCount wow fadeIn" data-wow-delay="0.3s">{this.countTotalNodes()}</span> nodes</div></div>
                 </div>
             </div>
             <div className="column">
@@ -277,7 +299,7 @@ class App extends Component {
           </div>
           <div className="column">
             <div className="sectionTitle">Audit Logs</div>
-            <table className='kaleidoTable' border="0" cellPadding="0" cellSpacing="0">{this.renderAuditLog()}</table>
+            <table className="kaleidoTable wow fadeIn" data-wow-delay="0.1s" border="0" cellPadding="0" cellSpacing="0">{this.renderAuditLog()}</table>
           </div>
         </div>
       </div>
