@@ -64,11 +64,10 @@ class App extends Component {
     clearInterval(this.state.timer);
     this.setState({timer: setInterval(() => {
         this.getData();
-    }, 3000)});
+    }, 100000)});
   }
 
   getData() {
-    console.log("fetc");
     this.setState({invitationStates:{}});
     this.getEndpoint("consortium")
       .then(res => this.setState({ consortium: res }))

@@ -117,7 +117,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-pro": "^5.4.1",
+    "@fortawesome/fontawesome-pro": "^5.5.0",
     "react-highcharts": "^16.0.2"
   }
 }
